@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Product Catalog Filters Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f9f9f9;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    label {
+      display: inline-block;
+      margin-right: 20px;
+      font-weight: bold;
+    }
+
+    select {
+      padding: 5px 10px;
+      margin-left: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+    }
+
+    hr {
+      margin: 20px 0;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+
+    #productList {
+      margin-top: 20px;
+    }
+
+    .product {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .product:hover {
+      background-color: #f0f8ff;
+    }
+
+    p {
+      color: #888;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <h2>Product Catalog Filters</h2>
+  <!-- Category Filter -->
+  <label>
+    Category:
+    <select id="categoryFilter">
+      <option value="">All</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Clothing">Clothing</option>
+    </select>
+  </label>
+  <!-- Price Filter -->
+  <label>
+    Price:
+    <select id="priceFilter">
+      <option value="">All</option>
+      <option value="low">Below $50</option>
+      <option value="medium">$50 - $100</option>
+      <option value="high">Above $100</option>
+    </select>
+  </label>
+  <hr>
+  <div id="productList"></div>
+
+  <script>
+    const products = [
+      { name: "Smartphone", category: "Electronics", price: 299 },
+      { name: "T-shirt", category: "Clothing", price: 25 },
+      { name: "Headphones", category: "Electronics", price: 45 },
+      { name: "Jeans", category: "Clothing", price: 60 }
+    ];
+
+    function filterProducts() {
+      const category = document.getElementById("categoryFilter").value;
+      const price = document.getElementById("priceFilter").value;
+      let filtered = products.filter(p => {
+        let match = true;
+        if (category && p.category !== category) match = false;
+        if (price === "low" && p.price >= 50) match = false;
+        if (price === "medium" && (p.price < 50 || p.price > 100)) match = false;
+        if (price === "high" && p.price <= 100) match = false;
+        return match;
+      });
+      renderProducts(filtered);
+    }
+
+    function renderProducts(list) {
+      const container = document.getElementById("productList");
+      container.innerHTML = "";
+      if (list.length === 0) {
+        container.innerHTML = "<p>No products found.</p>";
+        return;
+      }
+      list.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "product";
+        div.textContent = `${p.name} - ${p.category} - $${p.price}`;
+        container.appendChild(div);
+      });
+    }
+
+    document.getElementById("categoryFilter").addEventListener("change", filterProducts);
+    document.getElementById("priceFilter").addEventListener("change", filterProducts);
+
+    // Initial render
+    renderProducts(products);
+  </script>
+</body>
+</html>
